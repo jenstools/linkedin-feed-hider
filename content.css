@@ -1,4 +1,7 @@
 /* Hide the feed while <html> carries .lfh-hidden (only set on /feed). */
+/* Current LinkedIn (2026): first child of the feed list is the "Start a post" box, keep it. */
+html.lfh-hidden [data-testid="mainFeed"] > :not(:first-child),
+/* Older LinkedIn markup. */
 html.lfh-hidden .scaffold-finite-scroll,
 html.lfh-hidden [data-finite-scroll-hotkey-context="FEED"],
 html.lfh-hidden .feed-shared-update-v2,
@@ -9,6 +12,13 @@ html.lfh-hidden [data-id^="urn:li:aggregate"],
 html.lfh-hidden main .feed-sort-toggle-dsa__wrapper,
 html.lfh-hidden main hr.feed-index-sort-border {
   display: none !important;
+}
+
+/* The list stretches to the full page height; shrink it so the button sits right under "Start a post". */
+html.lfh-hidden [data-testid="mainFeed"] {
+  height: auto !important;
+  min-height: 0 !important;
+  flex: none !important;
 }
 
 #lfh-bar {

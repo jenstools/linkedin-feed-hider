@@ -4,6 +4,8 @@ A tiny Chrome extension that hides the LinkedIn feed by default. A **Show feed**
 
 Messaging, notifications, profiles, search, and the "Start a post" box keep working as usual.
 
+Links to individual posts still work. Post pages (`/feed/update/…`, `/posts/…`) are never hidden. Notification links (`/feed/?highlightedUpdateUrn=…`) normally open the full feed with that post on top, so the extension redirects them to the post's own page instead.
+
 ## Install
 
 1. Open `chrome://extensions`
@@ -14,7 +16,7 @@ Messaging, notifications, profiles, search, and the "Start a post" box keep work
 ## How it works
 
 - `content.css` hides the feed list and its posts while `<html>` has the `lfh-hidden` class.
-- `content.js` sets that class on `/feed` pages and inserts the toggle button above the feed. A `MutationObserver` handles LinkedIn's single-page navigation.
+- `content.js` sets that class only on `/feed` itself (not on post pages) and inserts the toggle button above the feed. A `MutationObserver` handles LinkedIn's single-page navigation.
 - If LinkedIn changes its markup and the feed container can't be found, the button floats in the bottom-right corner so it's still reachable.
 
 No permissions, no tracking, no network requests.

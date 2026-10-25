@@ -1,6 +1,9 @@
 // Hides the LinkedIn feed by default and adds a button to bring it back.
 // The choice only lasts for the current page view: every fresh visit to /feed starts hidden.
 
+// Current LinkedIn feed list. Its first child is the "Start a post" box.
+const MAIN_FEED = '[data-testid="mainFeed"]';
+// Older LinkedIn markup: the button goes right before the feed container.
 const FEED_CONTAINERS = [
   '[data-finite-scroll-hotkey-context="FEED"]',
   'main .scaffold-finite-scroll',
@@ -11,7 +14,19 @@ const HIDDEN = [...FEED_CONTAINERS, POST].join(', ');
 let showFeed = false;
 let lastPath = null;
 
-const isFeedPage = () => location.pathname.startsWith('/feed');
+// Only the feed itself. Post pages like /feed/update/urn:li:activity:…/ stay untouched.
+const isFeedPage = () => /^\/feed\/?$/.test(location.pathname);
+
+// Notifications link to /feed/?highlightedUpdateUrn=…, which is the full feed with that post on top.
+// Send those to the post's own page instead, so the link works without showing the feed.
+let redirecting = false;
+function redirectToPost() {
+  const urn = new URLSearchParams(location.search).get('highlightedUpdateUrn');
+  if (!isFeedPage() || !urn || redirecting) return redirecting;
+  redirecting = true;
+  location.replace(`/feed/update/${urn}/`);
+  return true;
+}
 
 // Where to put the button: right above the feed list, or above the first post as fallback.
 function findAnchor() {
@@ -28,6 +43,7 @@ function setText(el, text) {
 }
 
 function render() {
+  if (redirectToPost()) return;
   const onFeed = isFeedPage();
   document.documentElement.classList.toggle('lfh-hidden', onFeed && !showFeed);
 
@@ -52,8 +68,14 @@ function render() {
   setText(bar.querySelector('.lfh-text'), showFeed ? '' : 'Feed hidden. Stay focused. 🧘');
   setText(bar.querySelector('button'), showFeed ? 'Hide feed again' : 'Show feed');
 
-  const anchor = findAnchor();
-  if (anchor) {
+  const mainFeed = document.querySelector(MAIN_FEED);
+  const anchor = mainFeed ? null : findAnchor();
+  if (mainFeed) {
+    bar.classList.remove('lfh-floating');
+    // Hidden: right under "Start a post". Shown: above the list, since the feed below never ends.
+    if (showFeed && bar.nextElementSibling !== mainFeed) mainFeed.before(bar);
+    if (!showFeed && bar.previousElementSibling !== mainFeed) mainFeed.after(bar);
+  } else if (anchor) {
     bar.classList.remove('lfh-floating');
     if (bar.nextElementSibling !== anchor) anchor.before(bar);
   } else {
