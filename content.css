@@ -1,0 +1,67 @@
+/* Hide the feed while <html> carries .lfh-hidden (only set on /feed). */
+html.lfh-hidden .scaffold-finite-scroll,
+html.lfh-hidden [data-finite-scroll-hotkey-context="FEED"],
+html.lfh-hidden .feed-shared-update-v2,
+html.lfh-hidden [data-urn^="urn:li:activity"],
+html.lfh-hidden [data-urn^="urn:li:aggregate"],
+html.lfh-hidden [data-id^="urn:li:activity"],
+html.lfh-hidden [data-id^="urn:li:aggregate"],
+html.lfh-hidden main .feed-sort-toggle-dsa__wrapper,
+html.lfh-hidden main hr.feed-index-sort-border {
+  display: none !important;
+}
+
+#lfh-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 16px;
+  padding: 32px 16px;
+  border-radius: 8px;
+  background: var(--color-background-container, #fff);
+  box-shadow: 0 0 0 1px rgba(140, 140, 140, 0.2);
+  font: 600 16px/1.4 -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
+  color: rgba(0, 0, 0, 0.75);
+  text-align: center;
+}
+
+#lfh-bar.lfh-shown {
+  flex-direction: row;
+  justify-content: center;
+  padding: 8px 16px;
+  background: transparent;
+  box-shadow: none;
+}
+
+#lfh-bar.lfh-floating {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 9999;
+  margin: 0;
+  padding: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+#lfh-bar button {
+  padding: 6px 20px;
+  border: 1px solid #0a66c2;
+  border-radius: 999px;
+  background: #0a66c2;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+#lfh-bar.lfh-shown button {
+  background: transparent;
+  color: #0a66c2;
+  font-size: 14px;
+}
+
+#lfh-bar button:hover {
+  background: #004182;
+  border-color: #004182;
+  color: #fff;
+}
